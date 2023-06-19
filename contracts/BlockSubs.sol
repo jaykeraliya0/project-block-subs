@@ -6,11 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BlockSubs is ERC20, Ownable {
     enum Role {
+        None,
         Silver,
         Gold,
         Diamond,
-        Platinum,
-        None
+        Platinum
     }
 
     struct Subscription {
