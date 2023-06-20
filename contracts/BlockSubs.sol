@@ -9,8 +9,8 @@ contract BlockSubs is ERC20, Ownable {
         None,
         Silver,
         Gold,
-        Diamond,
-        Platinum
+        Platinum,
+        Diamond
     }
 
     struct Subscription {
@@ -36,8 +36,8 @@ contract BlockSubs is ERC20, Ownable {
     constructor() ERC20("BlockSubs", "BSB") {
         _rolePrices[Role.Silver] = 10;
         _rolePrices[Role.Gold] = 20;
-        _rolePrices[Role.Diamond] = 30;
-        _rolePrices[Role.Platinum] = 40;
+        _rolePrices[Role.Platinum] = 30;
+        _rolePrices[Role.Diamond] = 40;
     }
 
     function registerUser(string memory name) public {
