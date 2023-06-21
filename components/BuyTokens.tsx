@@ -9,9 +9,10 @@ import abi from "@/artifacts/BlockSubs.json";
 
 type Props = {
   className?: string;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const BuyTokens = ({ className }: Props) => {
+const BuyTokens = ({ className, setUser }: Props) => {
   const MMSDK = new MetaMaskSDK({
     dappMetadata: {
       name: "BlockSubs",
@@ -51,9 +52,12 @@ const BuyTokens = ({ className }: Props) => {
         value: ethers.parseEther(String(value * 0.0001)),
       });
       await tx.wait();
-      toast.success("NFT Minted!", {
+      toast.success("Tokens Minted!", {
         id: notification,
       });
+      const tokens = await contract.balanceOf(signer.getAddress());
+      setUser((prev: any) => ({ ...prev, tokens: tokens.toString() }));
+      setOpen(false);
     } catch (error: any) {
       toast.error(error.message.split("(")[0].trim(), {
         id: notification,
