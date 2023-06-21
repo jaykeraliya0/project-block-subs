@@ -1,4 +1,5 @@
 "use client";
+import BuyTokens from "@/components/BuyTokens";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 type Props = {};
@@ -42,6 +43,7 @@ const Profile = (props: Props) => {
           <span className="text-sm text-gray-500">
             {user.address.slice(0, 6)}...{user.address.slice(-4)}
           </span>
+          <span className="text-xs font-bold text-gray-800">20 BSB</span>
           <div className="flex mt-4 space-x-3 md:mt-6">
             <button
               className={classNames(
@@ -53,9 +55,7 @@ const Profile = (props: Props) => {
             >
               {user.active ? "Cancel Subscription" : "Subscribe"}
             </button>
-            <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200">
-              Buy Tokens
-            </button>
+            <BuyTokens className="inline-flex items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200" />
           </div>
         </div>
         <div

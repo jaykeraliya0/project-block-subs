@@ -23,7 +23,6 @@ const ConnectWallet = ({ className }: Props) => {
         method: "wallet_switchEthereumChain",
         params: [{ chainId: "0xaa36a7" }],
       });
-      toast.success("Switched to Arbitrum");
     } catch (error) {
       toast.error("Failed to switch network");
     }
@@ -36,7 +35,6 @@ const ConnectWallet = ({ className }: Props) => {
       const chainId = await ethereum?.request({ method: "eth_chainId" });
       if (chainId !== "0xaa36a7") await switchNetwork();
       setAddress(accounts?.toString());
-      toast.success("Connected to MetaMask");
     } catch (error) {
       console.error(error);
     }
