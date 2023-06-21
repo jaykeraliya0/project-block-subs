@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import ConnectWallet from "./ConnectWallet";
 
 export default function Hero() {
   return (
@@ -19,7 +21,7 @@ export default function Hero() {
               className="flex items-center justify-between sm:h-10 lg:justify-start"
               aria-label="Global"
             >
-              <a href="#" className="-m-1.5 p-1.5">
+              <Link href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">BlockSubs</span>
                 <Image
                   alt="Your Company"
@@ -28,7 +30,7 @@ export default function Hero() {
                   width={200}
                   src="/logo.png"
                 />
-              </a>
+              </Link>
             </nav>
           </div>
 
@@ -56,12 +58,7 @@ export default function Hero() {
                 future of subscription management with BlockSubs.
               </p>
               <div className="mt-10 flex items-center gap-x-6">
-                <a
-                  href="#"
-                  className="rounded-md bg-amber-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
-                >
-                  Connect Wallet
-                </a>
+                <ConnectWallet className="rounded-md bg-amber-500 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-amber-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 transition-all duration-150" />
                 <a
                   href="#"
                   className="text-base font-semibold leading-7 text-gray-900"
