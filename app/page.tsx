@@ -6,10 +6,12 @@ import Pricing from "@/components/Pricing";
 
 export default function Home() {
   return (
-    <div>
+    <div className="h-screen overflow-y-scroll scroll-smooth">
       <Hero />
       <Features />
-      <Pricing />
+      <section id="pricing">
+        <Pricing />
+      </section>
       <FAQs />
       <Footer />
     </div>

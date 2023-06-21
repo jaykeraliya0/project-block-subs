@@ -11,7 +11,7 @@ const Profile = (props: Props) => {
   const user = {
     name: "Jay Keraliya",
     address: "0x011080Eb860c929a57056009592eB46710EbFe8c",
-    subscription: "silver",
+    subscription: "diamond",
     active: true,
   };
 
@@ -24,11 +24,11 @@ const Profile = (props: Props) => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+    <div className="min-h-screen bg-gradient-to-t from-gray-100 to-gray-50 flex justify-center items-center p-10">
+      <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow pt-10">
         <div className="flex justify-end px-4 pt-4"></div>
         <div className="flex flex-col items-center pb-10">
-          <div className="w-24 h-24 mb-3 rounded-full shadow-lg border flex justify-center items-center">
+          <div className="w-24 h-24 mb-3 rounded-full shadow-lg border flex justify-center items-center bg-white">
             <Jazzicon
               diameter={90}
               seed={jsNumberForAddress(
@@ -43,17 +43,19 @@ const Profile = (props: Props) => {
             {user.address.slice(0, 6)}...{user.address.slice(-4)}
           </span>
           <div className="flex mt-4 space-x-3 md:mt-6">
-            <a
-              href="#"
+            <button
               className={classNames(
                 user.active
                   ? "text-gray-900 bg-white border-gray-300 hover:bg-gray-100 focus:ring-gray-200"
                   : "text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200",
-                "inline-flex items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 "
+                "inline-flex shadow items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 "
               )}
             >
               {user.active ? "Cancel Subscription" : "Subscribe"}
-            </a>
+            </button>
+            <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200">
+              Buy Tokens
+            </button>
           </div>
         </div>
         <div
@@ -61,7 +63,7 @@ const Profile = (props: Props) => {
             gradients[
               user.subscription.toLowerCase() as keyof typeof gradients
             ],
-            "w-full p-3 bg-gradient-to-r rounded-b-lg"
+            "w-full p-3 bg-gradient-to-r rounded-b-lg border-t border-gray-500 shadow-inner"
           )}
         >
           <h1 className="text-3xl font-semibold text-gray-100 pb-1 capitalize">

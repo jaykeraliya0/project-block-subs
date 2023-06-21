@@ -38,13 +38,13 @@ export default function Hero() {
             <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
               <div className="hidden sm:mb-10 sm:flex">
                 <div className="relative rounded-full py-1 px-3 text-sm leading-6 text-gray-500 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                  Already have an subscription{" "}
+                  Explore membership{" "}
                   <a
-                    href="/404"
+                    href="#pricing"
                     className="whitespace-nowrap font-semibold text-amber-600"
                   >
                     <span className="absolute inset-0" aria-hidden="true" />
-                    Click Here <span aria-hidden="true">&rarr;</span>
+                    plans <span aria-hidden="true">&rarr;</span>
                   </a>
                 </div>
               </div>
@@ -59,21 +59,23 @@ export default function Hero() {
               </p>
               <div className="mt-10 flex items-center gap-x-6">
                 <ConnectWallet className="rounded-md bg-amber-500 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-amber-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 transition-all duration-150" />
-                <a
-                  href="#"
+                <Link
+                  href="/profile"
                   className="text-base font-semibold leading-7 text-gray-900"
                 >
-                  Explore subscriptions &rarr;
-                </a>
+                  Profile &rarr;
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="bg-gray-50 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <img
+        <Image
           className="aspect-[3/2] object-cover lg:aspect-auto lg:h-full lg:w-full"
           src="/hero.jpg"
+          width={2000}
+          height={1333}
           alt=""
         />
       </div>

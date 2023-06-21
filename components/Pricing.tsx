@@ -1,4 +1,5 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 
 const tiers = [
   {
@@ -33,12 +34,18 @@ export default function Pricing() {
       <div className="mx-auto max-w-7xl py-20 px-6 lg:px-8">
         <div className="sm:align-center sm:flex sm:flex-col">
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-center">
-            Pricing Plans
+            Pricing
           </h1>
           <p className="mt-5 text-xl text-gray-500 sm:text-center">
             Start building for free, then add a site plan to go live. Account
             plans unlock additional features.
           </p>
+          <Link
+            href="/profile"
+            className="mt-3 text-sm text-amber-500 font-medium sm:text-center hover:underline"
+          >
+            Do not have tokens? Buy some here.
+          </Link>
         </div>
         <div className="mt-12 space-y-4 sm:mt-16 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:mx-auto lg:max-w-4xl xl:mx-0 xl:max-w-none xl:grid-cols-4">
           {tiers.map((tier) => (
@@ -51,53 +58,16 @@ export default function Pricing() {
                   {tier.name}
                 </h2>
                 <p className="mt-8 flex items-end space-x-2">
-                  <span className="text-4xl font-bold tracking-tight text-gray-900 flex items-end">
-                    {tier.priceMonthly}
-                    <svg
-                      className="h-6 w-6 inline-block mb-1.5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1535"
-                      height="2500"
-                      preserveAspectRatio="xMidYMid"
-                      viewBox="0 0 256 417"
-                      id="ethereum"
-                    >
-                      <path
-                        fill="#343434"
-                        d="M127.961 0l-2.795 9.5v275.668l2.795 2.79 127.962-75.638z"
-                      ></path>
-                      <path
-                        fill="#8C8C8C"
-                        d="M127.962 0L0 212.32l127.962 75.639V154.158z"
-                      ></path>
-                      <path
-                        fill="#3C3C3B"
-                        d="M127.961 312.187l-1.575 1.92v98.199l1.575 4.6L256 236.587z"
-                      ></path>
-                      <path
-                        fill="#8C8C8C"
-                        d="M127.962 416.905v-104.72L0 236.585z"
-                      ></path>
-                      <path
-                        fill="#141414"
-                        d="M127.961 287.958l127.96-75.637-127.96-58.162z"
-                      ></path>
-                      <path
-                        fill="#393939"
-                        d="M0 212.32l127.96 75.638v-133.8z"
-                      ></path>
-                    </svg>
+                  <span className="text-4xl font-bold tracking-tight text-gray-900">
+                    {tier.priceMonthly} <span className="text-xl"> Tokens</span>
                   </span>
                   <span className="text-base font-medium text-gray-500">
                     /mo
                   </span>
                 </p>
-                <a
-                  href={tier.href}
-                  className="mt-8 block w-full rounded-md border border-amber-500 bg-amber-500 py-2 text-center text-sm font-semibold text-white hover:bg-amber-600"
-                >
+                <button className="mt-8 block w-full rounded-md border border-amber-500 bg-amber-500 py-2 text-center text-sm font-semibold text-white hover:bg-amber-600 transition-all duration-150">
                   Buy {tier.name}
-                </a>
+                </button>
               </div>
               <div className="px-6 pt-6 pb-8">
                 <h3 className="text-sm font-medium text-gray-900">
