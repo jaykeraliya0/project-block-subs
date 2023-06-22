@@ -29,11 +29,12 @@ const CancelButton = ({ setUser, user }: Props) => {
   const [open, setOpen] = useState(false);
 
   const cancelSubscription = async () => {
-    const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
-
     const notification = toast.loading("Cancelling subscription");
+
     try {
+      const chainId = await ethereum?.request({ method: "eth_chainId" });
+      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+
       const provider = new ethers.BrowserProvider(ethereum as any);
       const signer = await provider.getSigner();
 

@@ -24,20 +24,21 @@ const BuyTokens = ({ className, setUser }: Props) => {
   const [open, setOpen] = useState(false);
 
   const buyTokens = async (value: number) => {
-    const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
-
     const notification = toast.loading("Minting Tokens...");
 
-    const provider = new ethers.BrowserProvider(ethereum as any);
-    const signer = await provider.getSigner();
-
-    const contract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-      abi.abi,
-      signer
-    );
     try {
+      const chainId = await ethereum?.request({ method: "eth_chainId" });
+      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+
+      const provider = new ethers.BrowserProvider(ethereum as any);
+      const signer = await provider.getSigner();
+
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+        abi.abi,
+        signer
+      );
+
       const tx = await contract.mintTokens(value, {
         value: ethers.parseEther(String(value * 0.0001)),
       });

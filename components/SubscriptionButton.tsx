@@ -29,11 +29,12 @@ const SubscriptionButton = ({ setUser, user }: Props) => {
   const [open, setOpen] = useState(false);
 
   const subscribe = async (type: string) => {
-    const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
-
     const notification = toast.loading("Subscribing...");
+
     try {
+      const chainId = await ethereum?.request({ method: "eth_chainId" });
+      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+
       const value = ["silver", "gold", "platinum", "diamond"].indexOf(type) + 1;
 
       const provider = new ethers.BrowserProvider(ethereum as any);
