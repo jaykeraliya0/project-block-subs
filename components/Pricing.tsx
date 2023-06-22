@@ -4,25 +4,21 @@ import Link from "next/link";
 const tiers = [
   {
     name: "Silver",
-    href: "#",
     priceMonthly: 10,
     includedFeatures: ["Silver Background", "Silver Logo", "Silver Text"],
   },
   {
     name: "Gold",
-    href: "#",
     priceMonthly: 20,
     includedFeatures: ["Gold Background", "Gold Logo", "Gold Text"],
   },
   {
     name: "Platinum",
-    href: "#",
     priceMonthly: 30,
     includedFeatures: ["Platinum Background", "Platinum Logo", "Platinum Text"],
   },
   {
     name: "Diamond",
-    href: "#",
     priceMonthly: 40,
     includedFeatures: ["Diamond Background", "Diamond Logo", "Diamond Text"],
   },
@@ -65,9 +61,12 @@ export default function Pricing() {
                     /mo
                   </span>
                 </p>
-                <button className="mt-8 block w-full rounded-md border border-amber-500 bg-amber-500 py-2 text-center text-sm font-semibold text-white hover:bg-amber-600 transition-all duration-150">
+                <Link
+                  href="/profile"
+                  className="mt-8 block w-full rounded-md border border-amber-500 bg-amber-500 py-2 text-center text-sm font-semibold text-white hover:bg-amber-600 transition-all duration-150"
+                >
                   Buy {tier.name}
-                </button>
+                </Link>
               </div>
               <div className="px-6 pt-6 pb-8">
                 <h3 className="text-sm font-medium text-gray-900">

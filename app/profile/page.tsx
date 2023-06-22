@@ -1,11 +1,13 @@
 "use client";
 import BuyTokens from "@/components/BuyTokens";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import MetaMaskSDK from "@metamask/sdk";
 import abi from "@/artifacts/BlockSubs.json";
 import { toast } from "react-hot-toast";
 import { ethers } from "ethers";
+import SubscriptionButton from "@/components/SubscriptionButton";
+import CancelButton from "@/components/CancelButton";
 
 type Props = {};
 
@@ -34,6 +36,7 @@ const Profile = (props: Props) => {
     active: boolean;
     subscription: string;
     tokens: number;
+    expiration: Date;
   }>();
   const [address, setAddress] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -104,12 +107,15 @@ const Profile = (props: Props) => {
           return "diamond";
       }
     };
-
+    const date = new Date(Number(user.expiration) * 1000);
     setUser({
       name: user.name,
-      active: parseSubscription(Number(user.roleId)) !== "none",
+      active:
+        date.getTime() > Date.now() &&
+        parseSubscription(Number(user.roleId)) !== "none",
       subscription: parseSubscription(Number(user.roleId))!,
       tokens: Number(tokens),
+      expiration: date,
     });
 
     setLoading(false);
@@ -152,11 +158,9 @@ const Profile = (props: Props) => {
         </div>
       </div>
     );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-t from-gray-100 to-gray-50 flex justify-center items-center p-10">
-      {address && user && user.name ? (
+  } else if (address && user && user.name) {
+    return (
+      <div className="min-h-screen bg-gradient-to-t from-gray-100 to-gray-50 flex justify-center items-center p-10">
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow pt-10">
           <div className="flex justify-end px-4 pt-4"></div>
           <div className="flex flex-col items-center pb-10">
@@ -173,16 +177,11 @@ const Profile = (props: Props) => {
               {user.tokens} BSB
             </span>
             <div className="flex mt-4 space-x-3 md:mt-6">
-              <button
-                className={classNames(
-                  user.active
-                    ? "text-gray-900 bg-white border-gray-300 hover:bg-gray-100 focus:ring-gray-200"
-                    : "text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200",
-                  "inline-flex shadow items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 "
-                )}
-              >
-                {user.active ? "Cancel Subscription" : "Subscribe"}
-              </button>
+              {!user.active ? (
+                <SubscriptionButton setUser={setUser} user={user} />
+              ) : (
+                <CancelButton setUser={setUser} user={user} />
+              )}
               <BuyTokens
                 setUser={setUser}
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200"
@@ -206,48 +205,14 @@ const Profile = (props: Props) => {
                   {user.active ? (
                     <>
                       <span className="font-bold">Expiration:</span>{" "}
-                      <span className="text-xs font-medium">05 Oct 2023</span>
+                      <span className="text-xs font-medium">
+                        {user.expiration.toDateString()}
+                      </span>
                     </>
                   ) : (
                     <>
                       <span className="font-bold">Starting at:</span>{" "}
-                      <span className="font-medium">
-                        10{" "}
-                        <svg
-                          className="h-4 w-4 inline-block mb-1.5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="1535"
-                          height="2500"
-                          preserveAspectRatio="xMidYMid"
-                          viewBox="0 0 256 417"
-                          id="ethereum"
-                        >
-                          <path
-                            fill="#CBCBCB"
-                            d="M127.961 0l-2.795 9.5v275.668l2.795 2.79 127.962-75.638z"
-                          ></path>
-                          <path
-                            fill="#8C8C8C"
-                            d="M127.962 0L0 212.32l127.962 75.639V154.158z"
-                          ></path>
-                          <path
-                            fill="#888887"
-                            d="M127.961 312.187l-1.575 1.92v98.199l1.575 4.6L256 236.587z"
-                          ></path>
-                          <path
-                            fill="#8C8C8C"
-                            d="M127.962 416.905v-104.72L0 236.585z"
-                          ></path>
-                          <path
-                            fill="#EBEBEB"
-                            d="M127.961 287.958l127.96-75.637-127.96-58.162z"
-                          ></path>
-                          <path
-                            fill="#C5C5C5"
-                            d="M0 212.32l127.96 75.638v-133.8z"
-                          ></path>
-                        </svg>
-                      </span>
+                      <span className="text-xs font-medium">10 BSB</span>
                     </>
                   )}
                 </p>
@@ -255,7 +220,11 @@ const Profile = (props: Props) => {
             </div>
           </div>
         </div>
-      ) : (
+      </div>
+    );
+  } else if (!loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-t from-gray-100 to-gray-50 flex justify-center items-center p-10">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -282,9 +251,9 @@ const Profile = (props: Props) => {
             Register
           </button>
         </form>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default Profile;

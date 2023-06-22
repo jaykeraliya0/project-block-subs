@@ -24,7 +24,12 @@ export default function RootLayout({
               background: "#000",
               color: "#fff",
             },
-            duration: 2000,
+            success: {
+              duration: 2000,
+            },
+            error: {
+              duration: 2000,
+            },
           }}
         />
         {children}
