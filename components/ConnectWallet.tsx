@@ -1,7 +1,7 @@
 "use client";
+import switchNetwork from "@/utils/switchNetwork";
 import MetaMaskSDK from "@metamask/sdk";
 import { useState } from "react";
-import { toast } from "react-hot-toast";
 
 type Props = {
   className?: string;
@@ -17,23 +17,12 @@ const ConnectWallet = ({ className }: Props) => {
 
   const [address, setAddress] = useState<string>();
 
-  const switchNetwork = async () => {
-    try {
-      await ethereum?.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0xaa36a7" }],
-      });
-    } catch (error) {
-      toast.error("Failed to switch network");
-    }
-  };
-
   const toggleConnect = async () => {
     try {
       await ethereum?.request({ method: "eth_requestAccounts" });
       const accounts = await ethereum?.request({ method: "eth_accounts" });
       const chainId = await ethereum?.request({ method: "eth_chainId" });
-      if (chainId !== "0xaa36a7") await switchNetwork();
+      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
       setAddress(accounts?.toString());
     } catch (error) {
       console.error(error);

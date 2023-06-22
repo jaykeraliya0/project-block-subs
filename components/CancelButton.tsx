@@ -6,6 +6,7 @@ import abi from "@/artifacts/BlockSubs.json";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import switchNetwork from "@/utils/switchNetwork";
 
 type Props = {
   user: {
@@ -27,20 +28,9 @@ const CancelButton = ({ setUser, user }: Props) => {
 
   const [open, setOpen] = useState(false);
 
-  const switchNetwork = async () => {
-    try {
-      await ethereum?.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0xaa36a7" }],
-      });
-    } catch (error) {
-      toast.error("Failed to switch network");
-    }
-  };
-
   const cancelSubscription = async () => {
     const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork();
+    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
 
     const notification = toast.loading("Cancelling subscription");
     try {

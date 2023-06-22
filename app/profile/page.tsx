@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { ethers } from "ethers";
 import SubscriptionButton from "@/components/SubscriptionButton";
 import CancelButton from "@/components/CancelButton";
+import switchNetwork from "@/utils/switchNetwork";
 
 type Props = {};
 
@@ -41,20 +42,9 @@ const Profile = (props: Props) => {
   const [address, setAddress] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const switchNetwork = async () => {
-    try {
-      await ethereum?.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0xaa36a7" }],
-      });
-    } catch (error) {
-      toast.error("Failed to switch network");
-    }
-  };
-
   const registerUser = async (name: string) => {
     const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork();
+    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
 
     const notification = toast.loading("Registering user...");
     try {
@@ -79,7 +69,7 @@ const Profile = (props: Props) => {
   const getUser = async () => {
     setLoading(true);
     const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork();
+    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
 
     const provider = new ethers.BrowserProvider(ethereum as any);
     const signer = await provider.getSigner();
