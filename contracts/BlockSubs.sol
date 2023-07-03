@@ -34,10 +34,10 @@ contract BlockSubs is ERC20, Ownable {
     bool private _isProcessingCancellation;
 
     constructor() ERC20("BlockSubs", "BSB") {
-        _rolePrices[Role.Silver] = 10;
-        _rolePrices[Role.Gold] = 20;
-        _rolePrices[Role.Platinum] = 30;
-        _rolePrices[Role.Diamond] = 40;
+        _rolePrices[Role.Silver] = 10 * 10 ** 18; // Adjust the role prices to match the new decimal places
+        _rolePrices[Role.Gold] = 20 * 10 ** 18;
+        _rolePrices[Role.Platinum] = 30 * 10 ** 18;
+        _rolePrices[Role.Diamond] = 40 * 10 ** 18;
     }
 
     function registerUser(string memory name) public {
@@ -126,12 +126,12 @@ contract BlockSubs is ERC20, Ownable {
     function mintTokens(uint256 amount) public payable {
         require(amount > 0, "Amount must be greater than zero");
         require(
-            balanceOf(msg.sender) + amount <= _MAX_MINT_AMOUNT,
+            amount <= _MAX_MINT_AMOUNT * 10 ** 18,
             "Exceeds maximum amount per wallet"
         );
         require(msg.value == amount * _TOKEN_PRICE, "Incorrect payment amount");
 
-        _mint(msg.sender, amount);
+        _mint(msg.sender, amount * 10 ** 18); // Multiply the amount by 10^18
     }
 
     function transfer(
