@@ -82,3 +82,4 @@ The BlockSubs project is licensed under the MIT License.
 ## Disclaimer
 
 This smart contract is provided as-is without any warranties or guarantees. Use it at your own risk. The contract author and contributors are not responsible for any loss of funds or damages caused by the usage of this contract.
+
