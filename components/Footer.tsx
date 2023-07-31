@@ -9,7 +9,7 @@ export default function Footer() {
             target="_blank"
             className="hover:underline"
           >
-            Jay Keraliya
+            Jay Keraliya & Henil Mendapra
           </a>
         </span>
         {/* add github source code link */}
