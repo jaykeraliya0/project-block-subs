@@ -12,7 +12,6 @@ export default function Footer() {
             Jay Keraliya & Henil Mendapra
           </a>
         </span>
-        {/* add github source code link */}
         <span className="text-sm text-gray-500 sm:text-center">
           Licensed under MIT.{" "}
           <a

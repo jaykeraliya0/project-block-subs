@@ -4,7 +4,6 @@ import {
   MagnifyingGlassIcon,
   NewspaperIcon,
 } from "@heroicons/react/24/outline";
-
 const features = [
   {
     name: "Secure Blockchain Technology",
@@ -68,3 +67,4 @@ export default function Features() {
     </div>
   );
 }
+

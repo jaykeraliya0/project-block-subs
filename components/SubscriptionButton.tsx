@@ -4,11 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { ReceiptPercentIcon } from "@heroicons/react/24/outline";
 
 const SubscriptionButton = () => {
-
-
   const [open, setOpen] = useState(false);
-
-
   return (
     <>
       <button
@@ -117,5 +113,4 @@ const SubscriptionButton = () => {
     </>
   );
 };
-
 export default SubscriptionButton;

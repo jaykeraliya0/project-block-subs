@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import ConnectWallet from "./ConnectWallet";
-
 export default function Hero() {
   return (
     <div className="relative bg-white">

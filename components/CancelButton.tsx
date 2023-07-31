@@ -3,12 +3,8 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
-
 const CancelButton = () => {
-
-
   const [open, setOpen] = useState(false);
-
 
   return (
     <>

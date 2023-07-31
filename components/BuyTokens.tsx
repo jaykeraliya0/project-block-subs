@@ -1,23 +1,14 @@
 "use client";
 import { Fragment, useState } from "react";
-import { ethers } from "ethers";
-import { toast } from "react-hot-toast";
 import { Dialog, Transition } from "@headlessui/react";
 import { ReceiptPercentIcon } from "@heroicons/react/24/outline";
-import MetaMaskSDK from "@metamask/sdk";
-import abi from "@/artifacts/BlockSubs.json";
-import switchNetwork from "@/utils/switchNetwork";
 
 type Props = {
   className?: string;
 };
 
 const BuyTokens = ({ className }: Props) => {
-
-
   const [open, setOpen] = useState(false);
-
-
 
   return (
     <>

@@ -49,9 +49,9 @@ const Profile = () => {
           </span>
           <div className="flex mt-4 space-x-3 md:mt-6">
             {!user.active ? (
-              <SubscriptionButton user={user} />
+              <SubscriptionButton />
             ) : (
-              <CancelButton user={user} />
+              <CancelButton />
             )}
             <BuyTokens
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-center border rounded-lg focus:ring-4 focus:outline-none transition-all ease-in-out duration-150 text-white bg-amber-500 border-transparent hover:bg-amber-600 focus:ring-amber-200"
@@ -90,9 +90,8 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      )
     </div>
   );
 };
 
-      export default Profile;
+export default Profile;
