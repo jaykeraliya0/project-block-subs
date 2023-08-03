@@ -1,6 +1,5 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-
 const tiers = [
   {
     name: "Silver",
