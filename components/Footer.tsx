@@ -1,27 +1,37 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="bg-white rounded-lg border-t">
       <div className="w-full mx-auto max-w-screen-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between">
         <span className="text-sm text-gray-500 sm:text-center">
           Developed by{" "}
-          <a
+          <Link
             href="https://github.com/jaykeraliya0"
             target="_blank"
             className="hover:underline"
           >
             Jay Keraliya
-          </a>
+          </Link>{" "}
+          &amp;{" "}
+          <Link
+            href="https://github.com/henil999"
+            target="_blank"
+            className="hover:underline"
+          >
+            Henil Mendpara
+          </Link>
         </span>
         {/* add github source code link */}
         <span className="text-sm text-gray-500 sm:text-center">
           Licensed under MIT.{" "}
-          <a
-            href="https://github.com/jaykeraliya0/project-block-subs"
+          <Link
+            href="https://github.com/jay-s-block/project-block-subs"
             target="_blank"
             className="hover:underline"
           >
             Source code
-          </a>
+          </Link>
         </span>
       </div>
     </footer>
