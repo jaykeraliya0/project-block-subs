@@ -12,7 +12,7 @@ export default function Footer() {
             className="hover:underline"
           >
             Jay Keraliya & Henil Mendapra
-          </a>
+          </Link>
         </span>
         <span className="text-sm text-gray-500 sm:text-center">
           Licensed under MIT.{" "}
