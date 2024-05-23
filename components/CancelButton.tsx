@@ -1,85 +1,10 @@
 "use client";
-import MetaMaskSDK from "@metamask/sdk";
-import { ethers } from "ethers";
-import { toast } from "react-hot-toast";
-import abi from "@/artifacts/BlockSubs.json";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import switchNetwork from "@/utils/switchNetwork";
 
-type Props = {
-  user: {
-    name: string;
-    active: boolean;
-    subscription: string;
-    tokens: number;
-  };
-  setUser: React.Dispatch<React.SetStateAction<any>>;
-};
-
-const CancelButton = ({ setUser, user }: Props) => {
-  const MMSDK = new MetaMaskSDK({
-    dappMetadata: {
-      name: "BlockSubs",
-    },
-  });
-  const ethereum = MMSDK.getProvider();
-
+const CancelButton = () => {
   const [open, setOpen] = useState(false);
-
-  const cancelSubscription = async () => {
-    const notification = toast.loading("Cancelling subscription");
-
-    try {
-      const chainId = await ethereum?.request({ method: "eth_chainId" });
-      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
-
-      const provider = new ethers.BrowserProvider(ethereum as any);
-      const signer = await provider.getSigner();
-
-      const contract = new ethers.Contract(
-        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-        abi.abi,
-        signer
-      );
-
-      const tx = await contract.cancelSubscription();
-      await tx.wait();
-      toast.success("Subscription cancelled", { id: notification });
-      const user = await contract.getUser(ethereum?.selectedAddress);
-      const tokens = await contract.balanceOf(ethereum?.selectedAddress);
-
-      const parseSubscription = (subscription: number) => {
-        switch (subscription) {
-          case 0:
-            return "none";
-          case 1:
-            return "silver";
-          case 2:
-            return "gold";
-          case 3:
-            return "platinum";
-          case 4:
-            return "diamond";
-        }
-      };
-      const date = new Date(Number(user.expiration) * 1000);
-      setUser({
-        name: user.name,
-        active:
-          date.getTime() > Date.now() &&
-          parseSubscription(Number(user.roleId)) !== "none",
-        subscription: parseSubscription(Number(user.roleId))!,
-        tokens: Number(tokens),
-        expiration: date,
-      });
-
-      setOpen(false);
-    } catch (error: any) {
-      toast.error(error.message.split("(")[0], { id: notification });
-    }
-  };
 
   return (
     <>
@@ -145,7 +70,7 @@ const CancelButton = ({ setUser, user }: Props) => {
                     <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                      onClick={cancelSubscription}
+
                     >
                       Cancel Subscription
                     </button>
