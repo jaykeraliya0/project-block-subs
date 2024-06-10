@@ -2,13 +2,13 @@
 import BuyTokens from "@/components/BuyTokens";
 import { useEffect, useState } from "react";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
-import MetaMaskSDK from "@metamask/sdk";
 import abi from "@/artifacts/BlockSubs.json";
 import { toast } from "react-hot-toast";
 import { ethers } from "ethers";
 import SubscriptionButton from "@/components/SubscriptionButton";
 import CancelButton from "@/components/CancelButton";
 import switchNetwork from "@/utils/switchNetwork";
+import { useSDK } from "@metamask/sdk-react";
 
 type Props = {};
 
@@ -25,13 +25,6 @@ const gradients = {
 };
 
 const Profile = (props: Props) => {
-  const MMSDK = new MetaMaskSDK({
-    dappMetadata: {
-      name: "BlockSubs",
-    },
-  });
-  const ethereum = MMSDK.getProvider();
-
   const [user, setUser] = useState<{
     name: string;
     active: boolean;
@@ -39,14 +32,18 @@ const Profile = (props: Props) => {
     tokens: number;
     expiration: Date;
   }>();
-  const [address, setAddress] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
 
+  const { sdk, chainId, account, provider: rtyu } = useSDK();
+
+  const ethereum = sdk?.getProvider();
+
   const registerUser = async (name: string) => {
-    const chainId = await ethereum?.request({ method: "eth_chainId" });
-    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+    await sdk?.connect();
 
     const notification = toast.loading("Registering user...");
+    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+
     try {
       const provider = new ethers.BrowserProvider(ethereum as any);
       const signer = await provider.getSigner();
@@ -67,8 +64,9 @@ const Profile = (props: Props) => {
   };
 
   const getUser = async () => {
+    await sdk?.connect();
+
     setLoading(true);
-    const chainId = await ethereum?.request({ method: "eth_chainId" });
     if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
 
     const provider = new ethers.BrowserProvider(ethereum as any);
@@ -112,17 +110,12 @@ const Profile = (props: Props) => {
   };
 
   useEffect(() => {
-    const connect = async () => {
-      setLoading(true);
-      const accounts = await ethereum?.request({
-        method: "eth_requestAccounts",
-      });
-      setAddress(accounts?.toString());
-      setLoading(false);
-    };
-    connect();
     getUser();
-  }, []);
+  }, [account]);
+
+  useEffect(() => {
+    console.log("account", account);
+  }, [account]);
 
   if (loading) {
     return (
@@ -148,20 +141,20 @@ const Profile = (props: Props) => {
         </div>
       </div>
     );
-  } else if (address && user && user.name) {
+  } else if (account && user && user.name) {
     return (
       <div className="min-h-screen bg-gradient-to-t from-gray-100 to-gray-50 flex justify-center items-center p-10">
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow pt-10">
           <div className="flex justify-end px-4 pt-4"></div>
           <div className="flex flex-col items-center pb-10">
             <div className="w-24 h-24 mb-3 rounded-full shadow-lg border flex justify-center items-center bg-white">
-              <Jazzicon diameter={90} seed={jsNumberForAddress(address!)} />
+              <Jazzicon diameter={90} seed={jsNumberForAddress(account!)} />
             </div>
             <h5 className="mb-1 text-xl font-medium text-gray-900">
               {user.name}
             </h5>
             <span className="text-sm text-gray-500">
-              {address?.slice(0, 6)}...{address?.slice(-4)}
+              {account?.slice(0, 6)}...{account?.slice(-4)}
             </span>
             <span className="text-xs font-bold text-gray-800">
               {user.tokens} BSB

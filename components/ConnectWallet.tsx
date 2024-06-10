@@ -1,6 +1,5 @@
 "use client";
-import switchNetwork from "@/utils/switchNetwork";
-import MetaMaskSDK from "@metamask/sdk";
+import { useSDK } from "@metamask/sdk-react";
 import { useState } from "react";
 
 type Props = {
@@ -8,31 +7,26 @@ type Props = {
 };
 
 const ConnectWallet = ({ className }: Props) => {
-  const MMSDK = new MetaMaskSDK({
-    dappMetadata: {
-      name: "BlockSubs",
-    },
-  });
-  const ethereum = MMSDK.getProvider();
+  const [account, setAccount] = useState<string>();
+  const { sdk, connected, connecting, provider, chainId } = useSDK();
 
-  const [address, setAddress] = useState<string>();
+  console.log(sdk?.getProvider());
 
-  const toggleConnect = async () => {
+  const connect = async () => {
     try {
-      await ethereum?.request({ method: "eth_requestAccounts" });
-      const accounts = await ethereum?.request({ method: "eth_accounts" });
-      const chainId = await ethereum?.request({ method: "eth_chainId" });
-      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
-      setAddress(accounts?.toString());
-    } catch (error) {
-      console.error(error);
+      const accounts = await sdk?.connect();
+      setAccount(accounts?.[0]);
+    } catch (err) {
+      console.warn("failed to connect..", err);
     }
   };
 
   return (
     <>
-      <button className={className} onClick={toggleConnect}>
-        {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect"}
+      <button className={className} onClick={connect}>
+        {connected && account
+          ? `Connected: ${account?.slice(0, 6)}...${account?.slice(-4)}`
+          : "Connect Wallet"}
       </button>
     </>
   );

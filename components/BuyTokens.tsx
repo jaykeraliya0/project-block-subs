@@ -1,12 +1,12 @@
 "use client";
 import { Fragment, useState } from "react";
-import { ethers } from "ethers";
 import { toast } from "react-hot-toast";
 import { Dialog, Transition } from "@headlessui/react";
 import { ReceiptPercentIcon } from "@heroicons/react/24/outline";
-import MetaMaskSDK from "@metamask/sdk";
 import abi from "@/artifacts/BlockSubs.json";
 import switchNetwork from "@/utils/switchNetwork";
+import { ethers } from "ethers";
+import { useSDK } from "@metamask/sdk-react";
 
 type Props = {
   className?: string;
@@ -14,46 +14,45 @@ type Props = {
 };
 
 const BuyTokens = ({ className, setUser }: Props) => {
-  const MMSDK = new MetaMaskSDK({
-    dappMetadata: {
-      name: "BlockSubs",
-    },
-  });
-  const ethereum = MMSDK.getProvider();
+  const { sdk, connected, connecting, provider, chainId } = useSDK();
+
+  const ethereum = sdk?.getProvider();
 
   const [open, setOpen] = useState(false);
 
   const buyTokens = async (value: number) => {
     const notification = toast.loading("Minting Tokens...");
+    await sdk?.connect();
+    // try {
+    const chainId = await ethereum?.request({ method: "eth_chainId" });
+    if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
 
-    try {
-      const chainId = await ethereum?.request({ method: "eth_chainId" });
-      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+    const provider = new ethers.BrowserProvider(ethereum as any);
+    const signer = await provider.getSigner();
 
-      const provider = new ethers.BrowserProvider(ethereum as any);
-      const signer = await provider.getSigner();
+    const contract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+      abi.abi,
+      signer
+    );
 
-      const contract = new ethers.Contract(
-        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
-        abi.abi,
-        signer
-      );
+    const tx = await contract.mintTokens(value, {
+      value: ethers.parseEther(String(value * 0.0001)),
+    });
+    await tx.wait();
+    toast.success("Tokens Minted!", {
+      id: notification,
+    });
+    const tokens = await contract.balanceOf(signer.getAddress());
+    setUser((prev: any) => ({ ...prev, tokens: tokens.toString() }));
+    setOpen(false);
+    // } catch (error: any) {
+    //   console.log(error);
 
-      const tx = await contract.mintTokens(value, {
-        value: ethers.parseEther(String(value * 0.0001)),
-      });
-      await tx.wait();
-      toast.success("Tokens Minted!", {
-        id: notification,
-      });
-      const tokens = await contract.balanceOf(signer.getAddress());
-      setUser((prev: any) => ({ ...prev, tokens: tokens.toString() }));
-      setOpen(false);
-    } catch (error: any) {
-      toast.error(error.message.split("(")[0].trim(), {
-        id: notification,
-      });
-    }
+    //   toast.error(error.message.split("(")[0].trim(), {
+    //     id: notification,
+    //   });
+    // }
   };
 
   return (

@@ -1,5 +1,4 @@
 "use client";
-import MetaMaskSDK from "@metamask/sdk";
 import { ethers } from "ethers";
 import { toast } from "react-hot-toast";
 import abi from "@/artifacts/BlockSubs.json";
@@ -7,6 +6,7 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ReceiptPercentIcon } from "@heroicons/react/24/outline";
 import switchNetwork from "@/utils/switchNetwork";
+import { useSDK } from "@metamask/sdk-react";
 
 type Props = {
   user: {
@@ -19,12 +19,9 @@ type Props = {
 };
 
 const SubscriptionButton = ({ setUser, user }: Props) => {
-  const MMSDK = new MetaMaskSDK({
-    dappMetadata: {
-      name: "BlockSubs",
-    },
-  });
-  const ethereum = MMSDK.getProvider();
+  const { sdk, chainId, account } = useSDK();
+
+  const ethereum = sdk?.getProvider();
 
   const [open, setOpen] = useState(false);
 
