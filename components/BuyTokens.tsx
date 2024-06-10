@@ -1,14 +1,60 @@
 "use client";
 import { Fragment, useState } from "react";
+import { ethers } from "ethers";
+import { toast } from "react-hot-toast";
 import { Dialog, Transition } from "@headlessui/react";
 import { ReceiptPercentIcon } from "@heroicons/react/24/outline";
+import MetaMaskSDK from "@metamask/sdk";
+import abi from "@/artifacts/BlockSubs.json";
+import switchNetwork from "@/utils/switchNetwork";
 
 type Props = {
   className?: string;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const BuyTokens = ({ className }: Props) => {
+const BuyTokens = ({ className, setUser }: Props) => {
+  const MMSDK = new MetaMaskSDK({
+    dappMetadata: {
+      name: "BlockSubs",
+    },
+  });
+  const ethereum = MMSDK.getProvider();
+
   const [open, setOpen] = useState(false);
+
+  const buyTokens = async (value: number) => {
+    const notification = toast.loading("Minting Tokens...");
+
+    try {
+      const chainId = await ethereum?.request({ method: "eth_chainId" });
+      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+
+      const provider = new ethers.BrowserProvider(ethereum as any);
+      const signer = await provider.getSigner();
+
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+        abi.abi,
+        signer
+      );
+
+      const tx = await contract.mintTokens(value, {
+        value: ethers.parseEther(String(value * 0.0001)),
+      });
+      await tx.wait();
+      toast.success("Tokens Minted!", {
+        id: notification,
+      });
+      const tokens = await contract.balanceOf(signer.getAddress());
+      setUser((prev: any) => ({ ...prev, tokens: tokens.toString() }));
+      setOpen(false);
+    } catch (error: any) {
+      toast.error(error.message.split("(")[0].trim(), {
+        id: notification,
+      });
+    }
+  };
 
   return (
     <>
@@ -42,6 +88,11 @@ const BuyTokens = ({ className }: Props) => {
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                   <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const value = (e.target as any).price.value;
+                      buyTokens(value);
+                    }}
                   >
                     <div>
                       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">

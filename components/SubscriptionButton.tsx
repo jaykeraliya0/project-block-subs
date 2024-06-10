@@ -1,10 +1,89 @@
 "use client";
+import MetaMaskSDK from "@metamask/sdk";
+import { ethers } from "ethers";
+import { toast } from "react-hot-toast";
+import abi from "@/artifacts/BlockSubs.json";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ReceiptPercentIcon } from "@heroicons/react/24/outline";
+import switchNetwork from "@/utils/switchNetwork";
 
-const SubscriptionButton = () => {
+type Props = {
+  user: {
+    name: string;
+    active: boolean;
+    subscription: string;
+    tokens: number;
+  };
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+};
+
+const SubscriptionButton = ({ setUser, user }: Props) => {
+  const MMSDK = new MetaMaskSDK({
+    dappMetadata: {
+      name: "BlockSubs",
+    },
+  });
+  const ethereum = MMSDK.getProvider();
+
   const [open, setOpen] = useState(false);
+
+  const subscribe = async (type: string) => {
+    const notification = toast.loading("Subscribing...");
+
+    try {
+      const chainId = await ethereum?.request({ method: "eth_chainId" });
+      if (chainId !== "0xaa36a7") await switchNetwork(ethereum);
+
+      const value = ["silver", "gold", "platinum", "diamond"].indexOf(type) + 1;
+
+      const provider = new ethers.BrowserProvider(ethereum as any);
+      const signer = await provider.getSigner();
+
+      const contract = new ethers.Contract(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!,
+        abi.abi,
+        signer
+      );
+
+      const tx = await contract.addSubscription(value);
+      await tx.wait();
+      toast.success("Subscribed", { id: notification });
+
+      const user = await contract.getUser(ethereum?.selectedAddress);
+      const tokens = await contract.balanceOf(ethereum?.selectedAddress);
+
+      const parseSubscription = (subscription: number) => {
+        switch (subscription) {
+          case 0:
+            return "none";
+          case 1:
+            return "silver";
+          case 2:
+            return "gold";
+          case 3:
+            return "platinum";
+          case 4:
+            return "diamond";
+        }
+      };
+      const date = new Date(Number(user.expiration) * 1000);
+      setUser({
+        name: user.name,
+        active:
+          date.getTime() > Date.now() &&
+          parseSubscription(Number(user.roleId)) !== "none",
+        subscription: parseSubscription(Number(user.roleId))!,
+        tokens: Number(tokens),
+        expiration: date,
+      });
+
+      setOpen(false);
+    } catch (error: any) {
+      toast.error(error.message.split("(")[0], { id: notification });
+    }
+  };
+
   return (
     <>
       <button
@@ -41,7 +120,11 @@ const SubscriptionButton = () => {
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                   <form
-
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const value = (e.target as any).plan.value;
+                      subscribe(value);
+                    }}
                   >
                     <div>
                       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
@@ -113,4 +196,5 @@ const SubscriptionButton = () => {
     </>
   );
 };
+
 export default SubscriptionButton;

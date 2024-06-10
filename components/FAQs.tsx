@@ -1,6 +1,7 @@
 "use client";
 import { Disclosure } from "@headlessui/react";
 import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+
 const faqs = [
   {
     question: "How can I integrate BlockSubs into my application?",
@@ -39,6 +40,7 @@ const faqs = [
       "Yes, BlockSubs offers a refund policy for canceled subscriptions. When a user cancels their subscription, they are eligible for a refund based on the remaining time of their subscription period. The refund amount is calculated proportionally from the original subscription price. The refund is automatically transferred back to the user's wallet.",
   },
 ];
+
 export default function FAQs() {
   return (
     <div className="bg-white">
